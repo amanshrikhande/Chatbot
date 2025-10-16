@@ -1,0 +1,192 @@
+import Bot from "../model/bot.model.js";
+import User from "../model/user.model.js";
+
+export const Message = async (req, res) => {
+    try {
+        const { text } = req.body;
+        if (!text?.trim()) {
+            return res.status(400).json({ error: "Text cannot be empty!" })
+        }
+        const user = await User.create({
+            sender: "user",
+            text
+        })
+        const botResponses = {
+            "hello": "Hi, How can I help you?",
+            "can we become friend": "Yes",
+            "how are you": "I'm just a bot, but I'm doing great! How about you?",
+            "what is your name?": "I’m ChatBot, your virtual assistant.",
+            "who made you": "I was created by developers to help answer your questions.",
+            "tell me a joke": "Why don’t skeletons fight each other? They don’t have the guts!",
+            "what is the time": "I can’t see a clock, but your device should know.",
+            "bye": "Goodbye! Have a great day.",
+            "thank you": "You’re welcome!",
+            "i love you": "That’s sweet! I’m here to help you anytime.",
+            "where are you from": "I live in the cloud — no rent, no bills!",
+            "what can you do": "I can chat with you, answer questions, and keep you company.",
+
+            "what is python": "Python is a high-level, interpreted programming language known for simplicity and versatility.\n• Easy to read/write due to clean syntax (similar to English)\n• Dynamically typed and supports multiple paradigms (OOP, functional, procedural)\n• Extensive libraries for AI, data science, web, automation\n• Example: Used in Google, YouTube, Instagram, and machine learning applications",
+
+            "what is java?": "Java is a platform-independent, object-oriented programming language.\n• Famous for 'Write Once, Run Anywhere' due to JVM (Java Virtual Machine)\n• Used in enterprise systems, Android development, cloud apps\n• Provides features like garbage collection, strong memory management\n• Example: Banking systems, Android apps, large-scale enterprise applications",
+
+            "what is recursion": "Recursion is when a function calls itself to solve smaller parts of a problem.\n• Useful for problems that can be divided into subproblems (divide-and-conquer)\n• Requires a **base condition** to stop infinite looping\n• Commonly used in: factorial calculation, Fibonacci sequence, tree/graph traversal\n• Example in coding interview: 'Write a recursive function to reverse a linked list'",
+
+            "who is prime minister of india?": "Narendra Modi is the Prime Minister of India since May 2014.\n• Belongs to Bharatiya Janata Party (BJP)\n• Represents Varanasi constituency\n• Key initiatives: Digital India, Startup India, Swachh Bharat, Make in India\n• Interview Tip: Link to governance or technology (e.g., Digital India impact on IT industry)",
+
+            "what is g20": "The G20 (Group of Twenty) is an intergovernmental forum of 19 countries + the European Union.\n• Founded in 1999 to address global financial stability\n• Members include India, USA, China, Japan, EU, etc.\n• Discusses economic growth, climate change, sustainable development\n• Recent: India hosted G20 summit in 2023",
+
+            "tell me about yourself": "This is usually the first interview question.\nStructure:\n• Start with a brief intro (name, background, education/work)\n• Highlight your skills (technical + soft skills)\n• Share achievements (projects, internships, leadership roles)\n• Conclude with why you’re excited about this role\nExample: 'I am a Computer Science graduate skilled in Python and SQL. I completed an internship at XYZ where I optimized a database query, improving performance by 30%. I’m passionate about problem-solving and eager to contribute to your team’s success.'",
+
+            "why should we hire you": "HR wants to see your value-add.\n• Emphasize skills that match job requirements\n• Show enthusiasm and cultural fit\n• Example: 'I bring strong coding skills in Python and SQL, along with problem-solving ability proven through hackathons. I am also a quick learner and adapt well to team environments. I believe I can contribute to both technical delivery and innovative ideas.'",
+
+            "what is leadership": "Leadership is the ability to inspire and guide others toward achieving goals.\n• Key traits: vision, communication, accountability, decision-making\n• Example in interview: 'I led a college project team of 4, where I divided tasks, coordinated communication, and ensured deadlines. We successfully delivered a working prototype before schedule.'",
+
+            "who is virat kohli": "Virat Kohli is one of India’s greatest batsmen and former captain.\n• Known for consistency, fitness, and aggressive play\n• Holds record for fastest century in ODIs for India\n• Nicknamed 'Chase Master' for his performance in run-chases\n• Interview Tip: If asked about sports management, relate his discipline & fitness to leadership skills",
+            "what is artificial intelligence": "Artificial Intelligence (AI) is the simulation of human intelligence in machines that are programmed to think and learn. AI is used in applications like speech recognition, image analysis, and autonomous vehicles.",
+            "what is machine learning": "Machine Learning is a subset of AI that enables systems to learn and improve from experience without being explicitly programmed. It uses algorithms to find patterns in data.",
+            "what is cloud computing": "Cloud computing is the delivery of computing services like servers, storage, databases, networking, software, over the internet ('the cloud'). It enables flexible resources and economies of scale.",
+            "what is sql": "SQL (Structured Query Language) is a standard language for managing and manipulating databases. It is used to query, insert, update, and delete data in relational databases.",
+            "what is github": "GitHub is a web-based platform for version control and collaboration. It uses Git to track changes in code and allows multiple developers to work together on projects.",
+            "what is open source": "Open source refers to software whose source code is freely available for anyone to view, modify, and distribute. Examples include Linux, Python, and Apache.",
+            "what is blockchain": "Blockchain is a decentralized digital ledger that records transactions across many computers. It is the technology behind cryptocurrencies like Bitcoin.",
+            "what is cryptocurrency": "Cryptocurrency is a digital or virtual currency that uses cryptography for security. Bitcoin and Ethereum are popular examples.",
+            "what is internet of things": "The Internet of Things (IoT) refers to the network of physical devices connected to the internet, collecting and sharing data. Examples include smart home devices and wearable fitness trackers.",
+            "what is data science": "Data Science is the field of analyzing large amounts of data to extract insights and knowledge. It combines statistics, programming, and domain expertise.",
+            "what is devops": "DevOps is a set of practices that combines software development (Dev) and IT operations (Ops). It aims to shorten the development lifecycle and deliver high-quality software continuously.",
+            "what is agile methodology": "Agile is a software development methodology focused on iterative development, collaboration, and flexibility. Popular frameworks include Scrum and Kanban.",
+            "what is docker": "Docker is a platform for developing, shipping, and running applications in containers. Containers package software with all dependencies, making it portable and consistent.",
+            "what is react": "React is a popular JavaScript library for building user interfaces, especially single-page applications. It was developed by Facebook.",
+            "what is node.js": "Node.js is a runtime environment that allows you to run JavaScript on the server side. It is used for building scalable network applications.",
+            "what is api": "API stands for Application Programming Interface. It allows different software applications to communicate with each other.",
+            "what is operating system": "An operating system (OS) is system software that manages computer hardware, software resources, and provides common services for computer programs. Examples: Windows, macOS, Linux.",
+            "what is cloud storage": "Cloud storage is a service that allows you to store data on remote servers accessed via the internet. Examples: Google Drive, Dropbox, AWS S3.",
+            "what is cybersecurity": "Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks. It involves measures like firewalls, encryption, and secure passwords.",
+            "what is frontend": "Frontend refers to the part of a website or application that users interact with directly. Technologies include HTML, CSS, JavaScript.",
+            "what is backend": "Backend refers to the server-side of a web application, handling logic, database interactions, and authentication. Technologies include Node.js, Python, Java.",
+            "what is full stack developer": "A Full Stack Developer is skilled in both frontend and backend development, able to build complete web applications.",
+            "what is cloud native": "Cloud native describes applications designed to run in cloud environments, using microservices, containers, and dynamic orchestration.",
+            "what is microservices": "Microservices is an architectural style where applications are built as a collection of small, independent services that communicate over APIs.",
+            "what is big data": "Big Data refers to extremely large datasets that require advanced tools and techniques to store, process, and analyze. Examples: Hadoop, Spark.",
+            "what is sql injection": "SQL Injection is a security vulnerability that allows attackers to interfere with the queries an application makes to its database. Prevent it by using parameterized queries.",
+            "what is git": "Git is a distributed version control system used to track changes in source code during software development.",
+            "what is firebase": "Firebase is a platform developed by Google for creating mobile and web applications. It provides services like authentication, real-time database, and hosting.",
+            "what is rest api": "REST API is an architectural style for designing networked applications. It uses HTTP requests to access and manipulate data.",
+            "what is json": "JSON (JavaScript Object Notation) is a lightweight data-interchange format that is easy for humans to read and write, and easy for machines to parse and generate.",
+            "what is html": "HTML (HyperText Markup Language) is the standard markup language for creating web pages.",
+            "what is css": "CSS (Cascading Style Sheets) is a style sheet language used for describing the presentation of a document written in HTML.",
+            "what is javascript": "JavaScript is a programming language commonly used to create interactive effects within web browsers.",
+            "what is npm": "npm (Node Package Manager) is the default package manager for Node.js, used to install and manage packages.",
+            "what is typescript": "TypeScript is a superset of JavaScript that adds static typing, making it easier to catch errors during development.",
+            "what is mongodb": "MongoDB is a NoSQL database that stores data in flexible, JSON-like documents. It is popular for scalable web applications.",
+            "what is express.js": "Express.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.",
+            "what is postman": "Postman is a tool for testing APIs by sending requests and viewing responses.",
+            "what is aws": "AWS (Amazon Web Services) is a comprehensive cloud computing platform provided by Amazon, offering services like computing, storage, and databases.",
+            "what is azure": "Azure is Microsoft's cloud computing platform, providing a wide range of services including computing, analytics, storage, and networking.",
+            "what is google cloud": "Google Cloud Platform (GCP) is a suite of cloud computing services offered by Google, including computing, storage, and machine learning.",
+            "what is ssl": "SSL (Secure Sockets Layer) is a standard security technology for establishing an encrypted link between a server and a client.",
+            "what is oauth": "OAuth is an open standard for access delegation, commonly used for token-based authentication and authorization.",
+            "what is docker compose": "Docker Compose is a tool for defining and running multi-container Docker applications using a YAML file.",
+            "what is kubernetes": "Kubernetes is an open-source platform for automating deployment, scaling, and management of containerized applications.",
+            "what is ci cd": "CI/CD stands for Continuous Integration and Continuous Deployment, practices that automate software building, testing, and deployment.",
+            "what is version control": "Version control is a system that records changes to files over time so you can recall specific versions later. Git is a popular version control system.",
+            "what is agile": "Agile is a methodology for software development that emphasizes flexibility, collaboration, and customer feedback.",
+            "what is scrum": "Scrum is an agile framework for managing and completing complex projects. It uses sprints, daily stand-ups, and roles like Scrum Master and Product Owner.",
+            "what is kanban": "Kanban is a visual workflow management method used to optimize work and maximize efficiency.",
+            "what is testing": "Testing is the process of evaluating software to ensure it meets requirements and is free of bugs. Types include unit, integration, and system testing.",
+            "what is unit testing": "Unit testing involves testing individual components or functions of a software application to ensure they work as expected.",
+            "what is integration testing": "Integration testing checks how different modules or services work together.",
+            "what is system testing": "System testing evaluates the complete and integrated software to verify it meets requirements.",
+            "what is regression testing": "Regression testing ensures that new code changes do not adversely affect existing functionality.",
+            "what is automation testing": "Automation testing uses software tools to run tests automatically, improving speed and reliability.",
+            "what is selenium": "Selenium is a popular tool for automating web browsers for testing web applications.",
+            "what is api testing": "API testing involves verifying that APIs work as expected, including their functionality, reliability, performance, and security.",
+            "what is load testing": "Load testing checks how a system performs under heavy usage.",
+            "what is performance testing": "Performance testing measures how fast and responsive a system is under various conditions.",
+            "what is scalability": "Scalability is the ability of a system to handle increased load by adding resources.",
+            "what is reliability": "Reliability is the ability of a system to function correctly and consistently over time.",
+            "what is maintainability": "Maintainability is how easily a system can be modified to fix defects, improve performance, or adapt to a changed environment.",
+            "what is usability": "Usability is the ease with which users can learn and use a product.",
+            "what is accessibility": "Accessibility means designing products so people with disabilities can use them.",
+            "what is responsive design": "Responsive design ensures web pages look good on all devices by adapting layout and content.",
+            "what is mobile first": "Mobile-first is a design strategy that prioritizes mobile devices when creating websites or applications.",
+            "what is progressive web app": "A Progressive Web App (PWA) is a web application that uses modern web capabilities to deliver an app-like experience to users.",
+            "what is cross platform": "Cross-platform means software that works on multiple operating systems or devices.",
+            "what is virtualization": "Virtualization is the creation of virtual versions of physical resources, such as servers or storage devices.",
+            "what is containerization": "Containerization packages applications and their dependencies into containers, making them portable and consistent across environments.",
+            "what is serverless": "Serverless computing allows you to run code without managing servers. Cloud providers handle the infrastructure.",
+            "what is edge computing": "Edge computing processes data near the source of generation rather than in a centralized data center, reducing latency.",
+            "what is artificial neural network": "An artificial neural network is a computing system inspired by the human brain, used in machine learning for tasks like image and speech recognition.",
+            "what is deep learning": "Deep learning is a subset of machine learning that uses neural networks with many layers to analyze complex data.",
+            "what is supervised learning": "Supervised learning is a type of machine learning where the model is trained on labeled data.",
+            "what is unsupervised learning": "Unsupervised learning is a type of machine learning where the model finds patterns in unlabeled data.",
+            "what is reinforcement learning": "Reinforcement learning is a type of machine learning where an agent learns by interacting with its environment and receiving rewards or penalties.",
+            "what is data mining": "Data mining is the process of discovering patterns and knowledge from large amounts of data.",
+            "what is big data analytics": "Big data analytics is the process of examining large and varied data sets to uncover hidden patterns, correlations, and insights.",
+            "what is business intelligence": "Business Intelligence (BI) refers to technologies and strategies used to analyze business data and support decision-making.",
+            "what is erp": "ERP (Enterprise Resource Planning) is software that manages and integrates a company’s core business processes.",
+            "what is crm": "CRM (Customer Relationship Management) is software that manages a company’s interactions with current and potential customers.",
+            "what is saas": "SaaS (Software as a Service) is a software distribution model in which applications are hosted by a provider and made available to customers over the internet.",
+            "what is paas": "PaaS (Platform as a Service) provides a platform allowing customers to develop, run, and manage applications without dealing with infrastructure.",
+            "what is iaas": "IaaS (Infrastructure as a Service) provides virtualized computing resources over the internet.",
+            "what is vpn": "VPN (Virtual Private Network) extends a private network across a public network, enabling secure data transmission.",
+            "what is firewall": "A firewall is a network security device that monitors and controls incoming and outgoing network traffic based on predetermined security rules.",
+            "what is encryption": "Encryption is the process of converting information into a code to prevent unauthorized access.",
+            "what is hashing": "Hashing is the process of converting data into a fixed-size string of characters, which is typically a hash code.",
+            "what is authentication": "Authentication is the process of verifying the identity of a user or system.",
+            "what is authorization": "Authorization is the process of giving someone permission to do or have something.",
+            "what is two factor authentication": "Two-factor authentication (2FA) adds an extra layer of security by requiring two forms of identification before granting access.",
+            "what is biometric authentication": "Biometric authentication uses unique biological characteristics, such as fingerprints or facial recognition, to verify identity.",
+            "what is phishing": "Phishing is a type of cyber attack where attackers impersonate legitimate organizations to steal sensitive information.",
+            "what is malware": "Malware is software designed to harm, exploit, or otherwise compromise a computer system.",
+            "what is ransomware": "Ransomware is a type of malware that encrypts a victim’s files and demands payment for the decryption key.",
+            "what is social engineering": "Social engineering is the use of deception to manipulate individuals into divulging confidential information.",
+            "what is ethical hacking": "Ethical hacking involves legally breaking into computers and devices to test an organization’s defenses.",
+            "what is penetration testing": "Penetration testing is a simulated cyber attack against your computer system to check for exploitable vulnerabilities.",
+            "what is zero trust": "Zero Trust is a security model that assumes no user or device is trustworthy by default, even if inside the network perimeter.",
+            "what is sdlc": "SDLC (Software Development Life Cycle) is a process for planning, creating, testing, and deploying an information system.",
+            "what is waterfall model": "The Waterfall model is a linear and sequential approach to software development, where each phase must be completed before the next begins.",
+            "what is design pattern": "A design pattern is a reusable solution to a common problem in software design.",
+            "what is mvc": "MVC (Model-View-Controller) is a design pattern that separates an application into three main components: Model, View, and Controller.",
+            "what is singleton pattern": "The Singleton pattern ensures a class has only one instance and provides a global point of access to it.",
+            "what is observer pattern": "The Observer pattern defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified.",
+            "what is factory pattern": "The Factory pattern provides an interface for creating objects in a super class, but allows subclasses to alter the type of objects that will be created.",
+            "what is polymorphism": "Polymorphism is the ability of an object to take on many forms, commonly used in object-oriented programming.",
+            "what is inheritance": "Inheritance is an object-oriented programming concept where a class derives properties and behavior from another class.",
+            "what is encapsulation": "Encapsulation is the bundling of data and methods that operate on that data within a single unit, or class.",
+            "what is abstraction": "Abstraction is the concept of hiding the complex reality while exposing only the necessary parts.",
+            "what is algorithm": "An algorithm is a step-by-step procedure for solving a problem or performing a task.",
+            "what is data structure": "A data structure is a way of organizing and storing data so that it can be accessed and modified efficiently.",
+            "what is array": "An array is a data structure that stores a collection of elements, typically of the same type, in a contiguous block of memory.",
+            "what is linked list": "A linked list is a linear data structure where each element is a separate object, and each element points to the next.",
+            "what is stack": "A stack is a linear data structure that follows the Last In First Out (LIFO) principle.",
+            "what is queue": "A queue is a linear data structure that follows the First In First Out (FIFO) principle.",
+            "what is tree": "A tree is a hierarchical data structure consisting of nodes, with a single root node and sub-nodes forming branches.",
+            "what is graph": "A graph is a data structure consisting of nodes (vertices) and edges connecting them.",
+            "what is hash table": "A hash table is a data structure that maps keys to values for highly efficient lookup.",
+            "what is sorting algorithm": "A sorting algorithm arranges elements in a list in a particular order, such as ascending or descending.",
+            "what is searching algorithm": "A searching algorithm finds an element in a data structure.",
+            "what is binary search": "Binary search is a fast algorithm for finding an item from a sorted list of items, repeatedly dividing the search interval in half.",
+            "what is bubble sort": "Bubble sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.",
+            "what is quick sort": "Quick sort is a divide-and-conquer sorting algorithm that selects a pivot and partitions the array around the pivot.",
+            "what is merge sort": "Merge sort is a divide-and-conquer algorithm that divides the array into halves, sorts them, and merges them back together.",
+            "what is time complexity": "Time complexity is a measure of the amount of time an algorithm takes to run as a function of the input size.",
+            "what is space complexity": "Space complexity is a measure of the amount of memory an algorithm uses as a function of the input size.",
+            "what is big o notation": "Big O notation describes the upper bound of the time or space complexity of an algorithm.",
+            "what is recursion": "Recursion is when a function calls itself to solve smaller parts of a problem.",
+            "what is ipl": "The Indian Premier League (IPL) is a professional T20 cricket league started in 2008.\n• Played annually in India, franchise-based teams\n• Combines cricket + entertainment (biggest sports league in India)\n• Significant for sports business, sponsorships, brand endorsements\n• Example: Chennai Super Kings (CSK) & Mumbai Indians (MI) are top teams"
+        }
+        const normalizedText = text.toLowerCase().trim();
+        const botResponse = botResponses[normalizedText] || "Sorry! I can't understand that.";
+        const bot = await Bot.create({
+            text: botResponse
+        })
+        return res.status(200).json({
+            userMessage: user.text,
+            botMessage: bot.text,
+        })
+    } catch (error) {
+        console.log("Error in message controller: ", error);
+        return res.status(500).json({ error: "Internal Server Error!" })
+
+    }
+}  
