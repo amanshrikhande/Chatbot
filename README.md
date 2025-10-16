@@ -55,32 +55,6 @@ You can run it locally, and it’s designed to be extended (e.g. hook it up to e
 
 ---
 
-### 📁 Project Structure
-
-**Backend (Node.js + Express)**
-- `server.js` – Entry point for backend
-- `routes/`
-  - `chat.js` – Chat API routes
-- `controllers/`
-  - `chatController.js` – Chat logic handling
-- `models/`
-  - `Message.js` – MongoDB schema for chat messages
-- `package.json` – Backend dependencies
-
-**Frontend (React)**
-- `src/`
-  - `components/` – Chat UI, message list, input box
-  - `pages/` – Main chat page
-  - `App.js` – Root React component
-  - `index.js` – React entry point
-- `package.json` – Frontend dependencies
-
-**Root**
-- `README.md` – Project documentation
-
-You may have slight differences — adjust accordingly.
-
----
 
 ## ⚙️ Installation & Setup
 
